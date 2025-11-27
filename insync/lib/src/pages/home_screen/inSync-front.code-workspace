@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "inSync-front",
+			"path": "../../../../.."
+		},
+		{
+			"name": "insync",
+			"path": "../../../../../../../Downloads/inSync-front/insync"
+		}
+	],
+	"settings": {}
+}

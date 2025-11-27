@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Paleta - App de Estudos</title>
+    <style>
+        :root {
+            --bg-main: #FFFFFF;
+            --bg-soft: #F5F5F5;
+            --border-soft: #E3E3E3;
+
+            --text-main: #2E2E2E;
+            --text-secondary: #6F6F6F;
+
+            --primary-red: #E63946;
+            --secondary-green-light: #A8E6CF;
+            --accent-green: #4CAF50;
+
+            --success: #8BC34A;
+            --warning: #FFF3B0;
+            --error: #FF6B6B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-main);
+            padding: 32px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1040px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            color: var(--text-secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            border: 1px solid var(--border-soft);
+            background: var(--bg-soft);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 140px;
+        }
+
+        .card h3 {
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .card small {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .swatch {
+            width: 100%;
+            height: 56px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .row span {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Botões de exemplo */
+
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border: 1px solid transparent;
+            cursor: default;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-red);
+            color: #FFFFFF;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-green-light);
+            color: var(--text-main);
+            border-color: var(--border-soft);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-main);
+            border-color: var(--border-soft);
+        }
+
+        /* Badges de status */
+
+        .status-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .status {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+        }
+
+        .status-success {
+            background: var(--success);
+            color: #FFFFFF;
+        }
+
+        .status-warning {
+            background: var(--warning);
+            color: var(--text-main);
+            border-color: var(--border-soft);
+        }
+
+        .status-error {
+            background: var(--error);
+            color: #FFFFFF;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border-soft);
+            padding-top: 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div>
+                <h1>Paleta Visual</h1>
+                <h2>App de Estudos com IA – Swiss Style</h2>
+            </div>
+            <span class="tag">Exploração de Cores</span>
+        </header>
+
+        <!-- Bloco principais -->
+        <section class="grid">
+            <article class="card">
+                <h3>Primária – Ação / Destaque</h3>
+                <small>Swiss Red · Botões principais, CTAs, focos visuais.</small>
+                <div class="swatch" style="background: var(--primary-red);"></div>
+                <div class="row">
+                    <span>HEX: #E63946</span>
+                    <span>Uso: Botões, links importantes</span>
+                </div>
+                <div class="buttons-row">
+                    <div class="btn btn-primary">Começar estudo</div>
+                </div>
+            </article>
+
+            <article class="card">
+                <h3>Secundária – Verde clarinho</h3>
+                <small>Verde claro · Realce suave, áreas informativas, sessões neutras.</small>
+                <div class="swatch" style="background: var(--secondary-green-light);"></div>
+                <div class="row">
+                    <span>HEX: #A8E6CF</span>
+                    <span>Uso: fundos, badges suaves</span>
+                </div>
+                <div class="buttons-row">
+                    <div class="btn btn-secondary">Resumo gerado</div>
+                </div>
+            </article>
+
+            <article class="card">
+                <h3>Acento – Verde forte</h3>
+                <small>Accent Green · Destaques menores, ícones, barras ou gráficos.</small>
+                <div class="swatch" style="background: var(--accent-green);"></div>
+                <div class="row">
+                    <span>HEX: #4CAF50</span>
+                    <span>Uso: indicadores, gráficos</span>
+                </div>
+            </article>
+        </section>
+
+        <!-- Neutros -->
+        <section class="grid">
+            <article class="card">
+                <h3>Background & Cards</h3>
+                <small>Fundo branco com cinzas suaves mantém o layout limpo.</small>
+                <div class="swatch" style="background: var(--bg-main); border: 1px solid var(--border-soft);"></div>
+                <div class="row">
+                    <span>Background principal: #FFFFFF</span>
+                </div>
+                <div class="swatch" style="background: var(--bg-soft); margin-top: 8px;"></div>
+                <div class="row">
+                    <span>Cards: #F5F5F5</span>
+                </div>
+            </article>
+
+            <article class="card">
+                <h3>Texto & Hierarquia</h3>
+                <small>Texto forte com cinza escuro; secundário em cinza médio.</small>
+                <div class="row">
+                    <span>Texto principal: #2E2E2E</span>
+                </div>
+                <div class="row">
+                    <span>Texto secundário: #6F6F6F</span>
+                </div>
+                <p>
+                    Títulos, números de perguntas e resultados podem usar o texto principal.
+                    Descrições e detalhes usam o secundário.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>Bordas & Divisores</h3>
+                <small>Linhas e bordas extremamente suaves, quase invisíveis.</small>
+                <div class="swatch" style="background: var(--border-soft);"></div>
+                <div class="row">
+                    <span>Bordas / Divisores: #E3E3E3</span>
+                </div>
+                <p>
+                    Use para separar cartões de conteúdo, resultados de questionário e blocos de informação sem poluir a
+                    interface.
+                </p>
+            </article>
+        </section>
+
+        <!-- Feedback -->
+        <section class="grid">
+            <article class="card">
+                <h3>Estados – Feedback</h3>
+                <small>Para respostas certas, erradas e avisos.</small>
+                <div class="status-row">
+                    <span class="status status-success">Acerto · #8BC34A</span>
+                    <span class="status status-error">Erro · #FF6B6B</span>
+                    <span class="status status-warning">Aviso · #FFF3B0</span>
+                </div>
+                <p>
+                    Esses estados podem aparecer em chips próximos às perguntas, nos resultados do questionário ou no
+                    resumo.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>Exemplo de Composição</h3>
+                <small>Combinação das cores como se fosse uma tela do app.</small>
+                <div class="swatch" style="
+          background: linear-gradient(
+            to right,
+            var(--bg-main) 0%,
+            var(--bg-main) 28%,
+            var(--secondary-green-light) 28%,
+            var(--secondary-green-light) 62%,
+            var(--primary-red) 62%,
+            var(--primary-red) 100%
+          );
+        "></div>
+                <p>
+                    Pense na tela com fundo branco, blocos de conteúdo em cinza claro, resumos em verde clarinho
+                    e ações principais em vermelho Swiss.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>Botões – Hierarquia</h3>
+                <small>Primário, secundário e neutro (ghost).</small>
+                <div class="buttons-row">
+                    <div class="btn btn-primary">Iniciar questionário</div>
+                    <div class="btn btn-secondary">Ver resumo</div>
+                    <div class="btn btn-ghost">Histórico</div>
+                </div>
+                <p>
+                    Use o botão vermelho para ações principais, o verde claro para ações contextuais
+                    e o ghost para ações secundárias.
+                </p>
+            </article>
+        </section>
+
+        <footer class="footer">
+            <span>Paleta inspirada em Swiss Design · Interface clara, tipografia forte e muito espaço em branco.</span>
+            <span>v0.1 · Explorando cores para o app de estudo com IA</span>
+        </footer>
+    </div>
+</body>
+
+</html>
