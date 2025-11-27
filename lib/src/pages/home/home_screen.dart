@@ -4,6 +4,7 @@ import 'package:estud_ai/src/core/constants/app_colors.dart';
 import 'package:estud_ai/src/core/constants/app_spacing.dart';
 import 'package:estud_ai/src/core/extensions/build_context_extension.dart';
 import 'package:estud_ai/src/pages/content/content_detail_screen.dart';
+import 'package:estud_ai/src/shared_widgets/buttons/primary_button.dart';
 import 'package:estud_ai/src/shared_widgets/layout/surface_card.dart';
 import 'package:estud_ai/src/utils/nav/transitions.dart';
 import 'package:flutter/material.dart';
@@ -26,134 +27,117 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncConteudos = ref.watch(conteudosProvider);
+    final isWide = context.screenSize.width > 720;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        elevation: 0,
-        titleSpacing: AppSpacing.xl,
-        title: Row(
-          children: [
-            Container(
-              height: 42,
-              width: 42,
-              decoration: BoxDecoration(
-                color: AppColors.secondaryGreenLight,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Icon(
-                LucideIcons.sparkles,
-                size: 18,
-                color: AppColors.textMain,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Home',
-                  style: context.textTheme.titleLarge,
-                ),
-                Text(
-                  'Conteudos recentes',
-                  style: context.textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => ref.refresh(conteudosProvider.future),
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.xl,
-              AppSpacing.md,
-              AppSpacing.xl,
-              AppSpacing.xxl + 120,
-            ),
-            children: [
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.all(AppSpacing.xxl),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Estud.ai',
+                              style: context.textTheme.displayMedium?.copyWith(
+                                color: AppColors.textMain,
+                                height: 1.0,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              'Seus conteúdos',
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () => _showCreate(context, ref),
+                          icon: const Icon(LucideIcons.plus, size: 28),
+                          style: IconButton.styleFrom(
+                            backgroundColor: AppColors.textMain,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                            padding: const EdgeInsets.all(12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 48),
+                  ]),
+                ),
+              ),
               asyncConteudos.when(
                 data: (list) {
                   if (list.isEmpty) {
-                    return _EmptyState(onCreate: () => _showCreate(context, ref));
+                    return SliverFillRemaining(
+                      child: _EmptyState(onCreate: () => _showCreate(context, ref)),
+                    );
                   }
-                  return Column(
-                    children: [
-                    ...list.map(
-                      (c) => Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                        child: _ConteudoCard(
-                          conteudo: c,
-                          onTap: () => Navigator.push(
-                            context,
-                            SlideUpRoute(
-                              page: ContentDetailScreen(conteudoId: c.id),
+                  return SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 400,
+                        mainAxisSpacing: AppSpacing.lg,
+                        crossAxisSpacing: AppSpacing.lg,
+                        mainAxisExtent: 180,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final c = list[index];
+                          return _ConteudoCard(
+                            conteudo: c,
+                            onTap: () => Navigator.push(
+                              context,
+                              SlideUpRoute(
+                                page: ContentDetailScreen(conteudoId: c.id),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
+                        childCount: list.length,
                       ),
                     ),
-                  ],
-                );
+                  );
                 },
-                loading: () => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+                loading: () => const SliverFillRemaining(
                   child: Center(child: CircularProgressIndicator()),
                 ),
-                error: (err, _) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-                  child: Column(
-                    children: [
-                      Text(
-                        err.toString(),
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: AppColors.error,
+                error: (err, _) => SliverFillRemaining(
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Erro ao carregar',
+                          style: context.textTheme.titleMedium,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      OutlinedButton(
-                        onPressed: () => ref.refresh(conteudosProvider),
-                        child: const Text('Tentar novamente'),
-                      ),
-                    ],
+                        const SizedBox(height: AppSpacing.md),
+                        OutlinedButton(
+                          onPressed: () => ref.refresh(conteudosProvider),
+                          child: const Text('Tentar novamente'),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
+              const SliverPadding(padding: EdgeInsets.only(bottom: AppSpacing.xxl)),
             ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: SizedBox(
-          height: 96,
-          child: Center(
-            child: GestureDetector(
-              onTap: () => _showCreate(context, ref),
-              child: Container(
-                height: 64,
-                width: 64,
-                decoration: BoxDecoration(
-                  color: AppColors.accentGreen,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.accentGreen.withValues(alpha: 0.22),
-                      blurRadius: 22,
-                      offset: const Offset(0, 12),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  LucideIcons.plus,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-            ),
           ),
         ),
       ),
@@ -169,76 +153,135 @@ class HomeScreen extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: AppColors.background,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.zero,
       ),
       builder: (_) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
-            left: AppSpacing.xl,
-            right: AppSpacing.xl,
-            top: AppSpacing.xl,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Novo conteudo',
-                style: context.textTheme.headlineMedium,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            bool isLoading = false;
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl,
+                left: AppSpacing.xxl,
+                right: AppSpacing.xxl,
+                top: AppSpacing.xxl,
               ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'Descreva o que voce quer aprender (minimo 50 caracteres).',
-                style: context.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              TextField(
-                controller: controller,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  hintText: 'Ex: Revisao de fotossintese com questoes...',
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final text = controller.text.trim();
-                  final messenger = ScaffoldMessenger.of(context);
-                  final navigator = Navigator.of(context);
-                  if (text.length < 50) {
-                    messenger.showSnackBar(
-                      const SnackBar(
-                        content: Text('Escreva pelo menos 50 caracteres.'),
-                        backgroundColor: AppColors.error,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Novo conteúdo',
+                    style: context.textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'O que você quer aprender hoje?',
+                    style: context.textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  TextField(
+                    controller: controller,
+                    maxLines: 3,
+                    enabled: !isLoading,
+                    onChanged: (_) => setState(() {}),
+                    style: context.textTheme.bodyLarge,
+                    decoration: const InputDecoration(
+                      hintText: 'Ex: Resumo sobre a Revolução Francesa...',
+                      filled: true,
+                      fillColor: AppColors.backgroundSoft,
+                      border: InputBorder.none,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (controller.text.length < 10)
+                        Text(
+                          'Mínimo 10 caracteres',
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: AppColors.error,
+                          ),
+                        )
+                      else
+                        const SizedBox(),
+                      Text(
+                        '${controller.text.length} / 10',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: controller.text.length < 10
+                              ? AppColors.error
+                              : AppColors.textSecondary,
+                        ),
                       ),
-                    );
-                    return;
-                  }
-                  navigator.pop();
-                  final res = await repo.criarConteudo(text);
-                  if (res.isSuccess) {
-                    messenger.showSnackBar(
-                      const SnackBar(
-                        content: Text('Conteudo criado'),
-                        backgroundColor: AppColors.accentGreen,
-                      ),
-                    );
-                    ref.invalidate(conteudosProvider);
-                  } else {
-                    messenger.showSnackBar(
-                      SnackBar(
-                        content: Text(res.message ?? 'Erro ao criar'),
-                        backgroundColor: AppColors.error,
-                      ),
-                    );
-                  }
-                },
-                icon: const Icon(LucideIcons.send),
-                label: const Text('Enviar'),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton(
+                      isLoading: isLoading,
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              final text = controller.text.trim();
+                              final messenger = ScaffoldMessenger.of(context);
+                              final navigator = Navigator.of(context);
+
+                              if (text.length < 10) {
+                                messenger.showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Descreva com mais detalhes (mínimo 10 caracteres).'),
+                                    backgroundColor: AppColors.error,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              setState(() => isLoading = true);
+
+                              final res = await repo.criarConteudo(text);
+
+                              if (!context.mounted) return;
+                              setState(() => isLoading = false);
+
+                              if (res.isSuccess) {
+                                navigator.pop(); // Close only on success
+                                messenger.showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Conteúdo criado'),
+                                    backgroundColor: AppColors.success,
+                                  ),
+                                );
+                                ref.invalidate(conteudosProvider);
+
+                                final newId = res.data?['id']?.toString();
+                                if (newId != null) {
+                                  navigator.push(
+                                    SlideUpRoute(
+                                      page: ContentDetailScreen(conteudoId: newId),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                messenger.showSnackBar(
+                                  SnackBar(
+                                    content:
+                                        Text(res.message ?? 'Erro ao criar'),
+                                    backgroundColor: AppColors.error,
+                                  ),
+                                );
+                              }
+                            },
+                      label: 'CRIAR CONTEÚDO',
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -258,101 +301,54 @@ class _ConteudoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: SurfaceCard(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Hero(
+        tag: 'conteudo_${conteudo.id}',
+        child: Material(
+          type: MaterialType.transparency,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: AppColors.borderSoft),
+              borderRadius: BorderRadius.zero,
+            ),
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 36,
-                  width: 36,
-                  decoration: BoxDecoration(
-                    color: AppColors.secondaryGreenLight,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    LucideIcons.bookOpen,
-                    size: 18,
-                    color: AppColors.textMain,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundSoft,
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      child: const Icon(LucideIcons.bookOpen, size: 20, color: AppColors.textMain),
+                    ),
+                    const Spacer(),
+                    const Icon(LucideIcons.arrowUpRight, size: 20, color: AppColors.textSecondary),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    conteudo.titulo.isEmpty ? 'Conteudo' : conteudo.titulo,
-                    style: context.textTheme.titleMedium,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                const Spacer(),
+                Text(
+                  conteudo.titulo.isEmpty ? 'Sem título' : conteudo.titulo,
+                  style: context.textTheme.titleLarge?.copyWith(height: 1.2),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  conteudo.descricao,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              conteudo.descricao,
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-              style: context.textTheme.bodyMedium,
-            ),
-            if (conteudo.totalQuestionarios != null ||
-                conteudo.totalPerguntas != null) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                children: [
-                  if (conteudo.totalQuestionarios != null)
-                    _Tag(
-                      icon: LucideIcons.listChecks,
-                      label: '${conteudo.totalQuestionarios} questionarios',
-                    ),
-                  if (conteudo.totalPerguntas != null) ...[
-                    const SizedBox(width: AppSpacing.sm),
-                    _Tag(
-                      icon: LucideIcons.helpCircle,
-                      label: '${conteudo.totalPerguntas} perguntas',
-                    ),
-                  ],
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Tag extends StatelessWidget {
-  const _Tag({required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.borderSoft),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: AppColors.textSecondary),
-          const SizedBox(width: AppSpacing.xs),
-          Text(
-            label,
-            style: context.textTheme.labelMedium?.copyWith(
-              color: AppColors.textSecondary,
-            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -365,32 +361,34 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Icon(
-          LucideIcons.layers,
-          size: 48,
-          color: AppColors.textSecondary,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          'Nenhum conteudo ainda',
-          style: context.textTheme.titleMedium,
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          'Crie seu primeiro material e veja os questionarios aparecerem aqui.',
-          style: context.textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        ElevatedButton.icon(
-          onPressed: onCreate,
-          icon: const Icon(LucideIcons.plus),
-          label: const Text('Criar conteudo'),
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            LucideIcons.layers,
+            size: 64,
+            color: AppColors.borderSoft,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            'Nada por aqui',
+            style: context.textTheme.headlineMedium?.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'Crie seu primeiro conteúdo para começar.',
+            style: context.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          PrimaryButton(
+            onPressed: onCreate,
+            label: 'COMEÇAR AGORA',
+          ),
+        ],
+      ),
     );
   }
 }

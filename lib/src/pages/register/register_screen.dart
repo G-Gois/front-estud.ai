@@ -60,8 +60,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       Navigator.pop(context, true);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Cadastro concluido'),
-          backgroundColor: AppColors.accentGreen,
+          content: Text('Cadastro concluído'),
+          backgroundColor: AppColors.success,
         ),
       );
     } else {
@@ -80,103 +80,109 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final isWide = context.screenSize.width > 720;
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Criar conta'),
-        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(LucideIcons.arrowLeft, color: AppColors.textMain),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.xl),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: isWide ? 520 : 420),
-            child: Card(
-              color: AppColors.background,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-                side: const BorderSide(color: AppColors.borderSoft),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
+            constraints: BoxConstraints(maxWidth: isWide ? 400 : 360),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 34,
-                            width: 34,
-                            decoration: BoxDecoration(
-                              color: AppColors.accentGreen,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(
-                              LucideIcons.userPlus,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.md),
-                          Text(
-                            'Registro',
-                            style: context.textTheme.headlineMedium,
-                          ),
-                        ],
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        child: const Icon(
+                          LucideIcons.userPlus,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                       ),
                       const SizedBox(height: AppSpacing.xl),
-                      AppTextField(
-                        label: 'Nome completo',
-                        hintText: 'Maria Souza',
-                        controller: _nomeController,
-                        validator: (v) => Validators.required(
-                          v,
-                          field: 'Nome completo',
+                      Text(
+                        'Criar conta',
+                        style: context.textTheme.displayMedium?.copyWith(
+                          color: AppColors.textMain,
+                          height: 1.0,
                         ),
-                        prefixIcon: const Icon(LucideIcons.user, size: 18),
                       ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: 'E-mail',
-                        hintText: 'voce@estud.ai',
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        validator: Validators.email,
-                        prefixIcon: const Icon(LucideIcons.mail, size: 18),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: 'Senha',
-                        hintText: '********',
-                        controller: _senhaController,
-                        obscureText: true,
-                        validator: (v) => Validators.minLength(
-                          v,
-                          6,
-                          field: 'Senha',
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        'Preencha seus dados abaixo.',
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textSecondary,
                         ),
-                        prefixIcon: const Icon(LucideIcons.lock, size: 18),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: 'Data de nascimento (YYYY-MM-DD)',
-                        hintText: '1995-05-10',
-                        controller: _dataController,
-                        keyboardType: TextInputType.datetime,
-                        prefixIcon: const Icon(LucideIcons.calendar, size: 18),
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-                      PrimaryButton(
-                        label: 'Criar conta',
-                        isLoading: authState.isLoading,
-                        onPressed: _submit,
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 48),
+
+                  // Inputs
+                  AppTextField(
+                    label: 'Nome completo',
+                    hintText: 'Maria Souza',
+                    controller: _nomeController,
+                    validator: (v) => Validators.required(
+                      v,
+                      field: 'Nome completo',
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    label: 'E-mail',
+                    hintText: 'voce@estud.ai',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    validator: Validators.email,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    label: 'Senha',
+                    hintText: '••••••••',
+                    controller: _senhaController,
+                    obscureText: true,
+                    validator: (v) => Validators.minLength(
+                      v,
+                      6,
+                      field: 'Senha',
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    label: 'Data de nascimento',
+                    hintText: 'YYYY-MM-DD',
+                    controller: _dataController,
+                    keyboardType: TextInputType.datetime,
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
+
+                  // Actions
+                  PrimaryButton(
+                    label: 'CRIAR CONTA',
+                    isLoading: authState.isLoading,
+                    onPressed: _submit,
+                  ),
+                ],
               ),
             ),
           ),

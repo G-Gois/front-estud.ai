@@ -6,22 +6,22 @@ class AppColors {
 
   // Base
   static const Color background = Color(0xFFFFFFFF);
-  static const Color backgroundSoft = Color(0xFFF5F5F5);
-  static const Color borderSoft = Color(0xFFE3E3E3);
+  static const Color backgroundSoft = Color(0xFFF5F7FA); // Softer, slightly cool grey
+  static const Color borderSoft = Color(0xFFE1E4E8);
 
   // Texto
-  static const Color textMain = Color(0xFF2E2E2E);
-  static const Color textSecondary = Color(0xFF6F6F6F);
+  static const Color textMain = Color(0xFF2D3436); // Softer black
+  static const Color textSecondary = Color(0xFF636E72);
 
   // Ações
-  static const Color primaryRed = Color(0xFFE63946);
-  static const Color secondaryGreenLight = Color(0xFFA8E6CF);
-  static const Color accentGreen = Color(0xFF4CAF50);
+  static const Color primary = Color(0xFF00B894); // Minty Green (Modern & Friendly)
+  static const Color primaryDark = Color(0xFF00A884);
+  static const Color secondary = Color(0xFF55EFC4); // Lighter Green
 
   // Feedback
-  static const Color success = Color(0xFF8BC34A);
-  static const Color warning = Color(0xFFFFF3B0);
-  static const Color error = Color(0xFFFF6B6B);
+  static const Color success = Color(0xFF00B894);
+  static const Color warning = Color(0xFFFFCC00);
+  static const Color error = Color(0xFFFF7675); // Softer Red
 
   // Utilidades
   static const Color overlay = Color(0x14000000);

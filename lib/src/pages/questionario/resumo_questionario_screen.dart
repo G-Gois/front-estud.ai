@@ -3,6 +3,7 @@ import 'package:estud_ai/src/core/constants/app_colors.dart';
 import 'package:estud_ai/src/core/constants/app_spacing.dart';
 import 'package:estud_ai/src/core/extensions/build_context_extension.dart';
 import 'package:estud_ai/src/pages/questionario/questionario_screen.dart';
+import 'package:estud_ai/src/shared_widgets/buttons/primary_button.dart';
 import 'package:estud_ai/src/utils/nav/transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,94 +32,117 @@ class _ResumoQuestionarioScreenState
   Widget build(BuildContext context) {
     final resumo = widget.summary['resumo']?.toString() ??
         widget.summary['resumo_questionario']?.toString() ??
-        'Resumo nao disponivel';
+        'Resumo não disponível';
     final acertos = widget.summary['acertos'];
     final erros = widget.summary['erros'];
     final total = widget.summary['total_perguntas'];
     final perc = widget.summary['porcentagem_acerto'];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Resumo')),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(LucideIcons.x, color: AppColors.textMain),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Resumo',
+          style: context.textTheme.titleLarge,
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (total != null || acertos != null || perc != null) ...[
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.xs,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.xxl),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (total != null)
-                      _Badge(
-                        icon: LucideIcons.helpCircle,
-                        label: 'Total: $total',
-                        color: AppColors.backgroundSoft,
-                        darkText: true,
+                    if (total != null || acertos != null || perc != null) ...[
+                      Wrap(
+                        spacing: AppSpacing.md,
+                        runSpacing: AppSpacing.sm,
+                        children: [
+                          if (total != null)
+                            _Badge(
+                              label: 'TOTAL: $total',
+                            ),
+                          if (acertos != null)
+                            _Badge(
+                              label: 'ACERTOS: $acertos',
+                              color: AppColors.success.withValues(alpha: 0.1),
+                              borderColor: AppColors.success,
+                              textColor: AppColors.success,
+                            ),
+                          if (erros != null)
+                            _Badge(
+                              label: 'ERROS: $erros',
+                              color: AppColors.error.withValues(alpha: 0.1),
+                              borderColor: AppColors.error,
+                              textColor: AppColors.error,
+                            ),
+                          if (perc != null)
+                            _Badge(
+                              label: '$perc%',
+                              color: AppColors.textMain,
+                              textColor: Colors.white,
+                            ),
+                        ],
                       ),
-                    if (acertos != null)
-                      _Badge(
-                        icon: LucideIcons.check,
-                        label: 'Acertos: $acertos',
-                        color: AppColors.accentGreen.withValues(alpha: 0.14),
-                        darkText: true,
+                      const SizedBox(height: AppSpacing.xl),
+                    ],
+                    Text(
+                      'Desempenho',
+                      style: context.textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      resumo,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary,
+                        height: 1.5,
                       ),
-                    if (erros != null)
-                      _Badge(
-                        icon: LucideIcons.x,
-                        label: 'Erros: $erros',
-                        color: AppColors.error.withValues(alpha: 0.1),
-                        darkText: true,
-                      ),
-                    if (perc != null)
-                      _Badge(
-                        icon: LucideIcons.percent,
-                        label: '$perc%',
-                        color: AppColors.secondaryGreenLight,
-                        darkText: true,
-                      ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Text(
-                    resumo,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Row(
+            ),
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.xxl),
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: AppColors.borderSoft)),
+              ),
+              child: Column(
                 children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text('Parar'),
+                  SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton(
+                      onPressed: isCreatingNext ? null : _continuarEstudando,
+                      label: isCreatingNext
+                          ? 'GERANDO...'
+                          : 'CONTINUAR ESTUDANDO',
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: isCreatingNext ? null : _continuarEstudando,
-                      child: isCreatingNext
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text('Continuar estudando'),
+                  const SizedBox(height: AppSpacing.md),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.borderSoft),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text('VOLTAR PARA O CONTEÚDO'),
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -132,29 +156,28 @@ class _ResumoQuestionarioScreenState
       context: context,
       backgroundColor: AppColors.background,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.zero,
       ),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Proximo questionario',
-                style: context.textTheme.titleLarge,
+                'Próximo passo',
+                style: context.textTheme.headlineMedium,
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              PrimaryButton(
+                onPressed: () => Navigator.of(ctx).pop(true),
+                label: 'MODO PROGRESSÃO',
               ),
               const SizedBox(height: AppSpacing.md),
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(ctx).pop(true),
-                icon: const Icon(LucideIcons.trendingUp),
-                label: const Text('Modo progressao'),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              OutlinedButton.icon(
+              OutlinedButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                icon: const Icon(LucideIcons.repeat),
-                label: const Text('Modo fixacao'),
+                child: const Text('MODO FIXAÇÃO'),
               ),
             ],
           ),
@@ -189,7 +212,7 @@ class _ResumoQuestionarioScreenState
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result.message ?? 'Erro ao gerar questionario'),
+          content: Text(result.message ?? 'Erro ao gerar questionário'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -199,45 +222,36 @@ class _ResumoQuestionarioScreenState
 
 class _Badge extends StatelessWidget {
   const _Badge({
-    required this.icon,
     required this.label,
     this.color,
-    this.darkText = false,
+    this.borderColor,
+    this.textColor,
   });
 
-  final IconData icon;
   final String label;
   final Color? color;
-  final bool darkText;
+  final Color? borderColor;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
+        vertical: 6,
       ),
       decoration: BoxDecoration(
         color: color ?? AppColors.backgroundSoft,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.borderSoft),
+        borderRadius: BorderRadius.zero,
+        border: Border.all(color: borderColor ?? Colors.transparent),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 14,
-            color: darkText ? AppColors.textMain : AppColors.textSecondary,
-          ),
-          const SizedBox(width: AppSpacing.xs),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: darkText ? AppColors.textMain : AppColors.textSecondary,
-                ),
-          ),
-        ],
+      child: Text(
+        label,
+        style: context.textTheme.labelSmall?.copyWith(
+          color: textColor ?? AppColors.textMain,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }

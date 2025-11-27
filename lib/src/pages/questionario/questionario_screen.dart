@@ -4,6 +4,7 @@ import 'package:estud_ai/src/core/constants/app_colors.dart';
 import 'package:estud_ai/src/core/constants/app_spacing.dart';
 import 'package:estud_ai/src/core/extensions/build_context_extension.dart';
 import 'package:estud_ai/src/pages/questionario/resumo_questionario_screen.dart';
+import 'package:estud_ai/src/shared_widgets/buttons/primary_button.dart';
 import 'package:estud_ai/src/shared_widgets/layout/surface_card.dart';
 import 'package:estud_ai/src/utils/nav/transitions.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +53,14 @@ class _QuestionarioScreenState extends ConsumerState<QuestionarioScreen> {
     final asyncQuest = ref.watch(questionarioProvider(widget.questionarioId));
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Questionario'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(LucideIcons.x, color: AppColors.textMain),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SafeArea(
         child: asyncQuest.when(
@@ -63,7 +70,7 @@ class _QuestionarioScreenState extends ConsumerState<QuestionarioScreen> {
             final perguntas =
                 (raw['perguntas'] as List<dynamic>? ?? []).cast<Map<String, dynamic>>();
             if (perguntas.isEmpty) {
-              return const Center(child: Text('Nenhuma pergunta neste questionario'));
+              return const Center(child: Text('Nenhuma pergunta neste questionário'));
             }
 
             final pergunta = perguntas[currentIndex];
@@ -78,109 +85,178 @@ class _QuestionarioScreenState extends ConsumerState<QuestionarioScreen> {
                 selectedOption != null &&
                 selectedOption == correta['id']?.toString();
 
-            return Padding(
-              padding: const EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondaryGreenLight,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Text(
-                          'Pergunta ${currentIndex + 1}/${perguntas.length}',
-                          style: context.textTheme.labelMedium,
-                        ),
-                      ),
-                      const Spacer(),
-                      if (schema.modo != null)
-                        Text(
-                          schema.modo!,
-                          style: context.textTheme.labelMedium,
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    pergunta['enunciado']?.toString() ?? '',
-                    style: context.textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  ...opcoes.map(
-                    (op) => Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: RadioListTile<String>(
-                        value: op['id']?.toString() ?? '',
-                        groupValue: selectedOption,
-                        onChanged: showFeedback
-                            ? null
-                            : (value) => setState(() => selectedOption = value),
-                        title: Text(
-                          op['texto']?.toString() ?? op['texto_opcao']?.toString() ?? '',
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (showFeedback)
-                    SurfaceCard(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                acertou ? LucideIcons.checkCircle : LucideIcons.xCircle,
-                                color: acertou ? AppColors.accentGreen : AppColors.error,
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(AppSpacing.xxl),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md,
+                                vertical: 6,
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              decoration: BoxDecoration(
+                                color: AppColors.textMain,
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              child: Text(
+                                '${currentIndex + 1} / ${perguntas.length}',
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            if (schema.modo != null)
                               Text(
-                                acertou ? 'Resposta correta' : 'Resposta errada',
-                                style: context.textTheme.titleSmall,
+                                schema.modo!.toUpperCase(),
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 1.0,
+                                ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            'Correta: ${correta['texto'] ?? correta['texto_opcao'] ?? ''}',
-                            style: context.textTheme.bodyMedium,
-                          ),
-                          if (pergunta['explicacao'] != null) ...[
-                            const SizedBox(height: AppSpacing.sm),
-                            Text(
-                              'Explicacao:',
-                              style: context.textTheme.titleSmall,
-                            ),
-                            Text(
-                              pergunta['explicacao']?.toString() ?? '',
-                              style: context.textTheme.bodyMedium,
-                            ),
                           ],
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                        Text(
+                          pergunta['enunciado']?.toString() ?? '',
+                          style: context.textTheme.headlineMedium?.copyWith(
+                            height: 1.2,
+                          ),
+                        ),
+                        const SizedBox(height: 48),
+                        ...opcoes.map(
+                          (op) {
+                            final id = op['id']?.toString() ?? '';
+                            final isSelected = selectedOption == id;
+                            final isCorrect = correta['id']?.toString() == id;
+                            
+                            Color borderColor = AppColors.borderSoft;
+                            Color backgroundColor = Colors.white;
+                            
+                            if (showFeedback) {
+                              if (isCorrect) {
+                                borderColor = AppColors.success;
+                                backgroundColor = AppColors.success.withValues(alpha: 0.1);
+                              } else if (isSelected && !acertou) {
+                                borderColor = AppColors.error;
+                                backgroundColor = AppColors.error.withValues(alpha: 0.1);
+                              }
+                            } else if (isSelected) {
+                              borderColor = AppColors.textMain;
+                              backgroundColor = AppColors.backgroundSoft;
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                              child: GestureDetector(
+                                onTap: showFeedback
+                                    ? null
+                                    : () => setState(() => selectedOption = id),
+                                child: Container(
+                                  padding: const EdgeInsets.all(AppSpacing.lg),
+                                  decoration: BoxDecoration(
+                                    color: backgroundColor,
+                                    borderRadius: BorderRadius.zero,
+                                    border: Border.all(
+                                      color: borderColor,
+                                      width: isSelected || (showFeedback && (isCorrect || (isSelected && !acertou))) ? 2 : 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          op['texto']?.toString() ?? op['texto_opcao']?.toString() ?? '',
+                                          style: context.textTheme.bodyLarge?.copyWith(
+                                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                                            color: AppColors.textMain,
+                                          ),
+                                        ),
+                                      ),
+                                      if (showFeedback && isCorrect)
+                                        const Icon(LucideIcons.checkCircle, color: AppColors.success, size: 20),
+                                      if (showFeedback && isSelected && !acertou)
+                                        const Icon(LucideIcons.xCircle, color: AppColors.error, size: 20),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        if (showFeedback) ...[
+                          const SizedBox(height: AppSpacing.xl),
+                          Container(
+                            padding: const EdgeInsets.all(AppSpacing.lg),
+                            decoration: BoxDecoration(
+                              color: acertou ? AppColors.success.withValues(alpha: 0.1) : AppColors.error.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.zero,
+                              border: Border.all(
+                                color: acertou ? AppColors.success : AppColors.error,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      acertou ? LucideIcons.check : LucideIcons.x,
+                                      color: acertou ? AppColors.success : AppColors.error,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: AppSpacing.sm),
+                                    Text(
+                                      acertou ? 'Correto!' : 'Incorreto',
+                                      style: context.textTheme.titleSmall?.copyWith(
+                                        color: acertou ? AppColors.success : AppColors.error,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (pergunta['explicacao'] != null) ...[
+                                  const SizedBox(height: AppSpacing.md),
+                                  Text(
+                                    pergunta['explicacao']?.toString() ?? '',
+                                    style: context.textTheme.bodyMedium,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
                         ],
-                      ),
-                    ),
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: isFinishing
-                        ? null
-                        : () => _handleAction(perguntas, pergunta),
-                    child: Text(
-                      isFinishing
-                          ? 'Finalizando...'
-                          : _isLast(perguntas)
-                              ? (showFeedback ? 'Finalizar' : 'Confirmar')
-                              : (showFeedback ? 'Proxima' : 'Confirmar'),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.xxl),
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: AppColors.borderSoft)),
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: PrimaryButton(
+                      onPressed: isFinishing
+                          ? null
+                          : () => _handleAction(perguntas, pergunta),
+                      label: isFinishing
+                          ? 'FINALIZANDO...'
+                          : _isLast(perguntas)
+                              ? (showFeedback ? 'FINALIZAR' : 'CONFIRMAR')
+                              : (showFeedback ? 'PRÓXIMA' : 'CONFIRMAR'),
+                    ),
+                  ),
+                ),
+              ],
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -215,7 +291,7 @@ class _QuestionarioScreenState extends ConsumerState<QuestionarioScreen> {
       if (selectedOption == null || selectedOption!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Selecione uma opcao'),
+            content: Text('Selecione uma opção'),
             backgroundColor: AppColors.error,
           ),
         );

@@ -62,130 +62,145 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isWide = context.screenSize.width > 720;
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: isWide ? 460 : 420),
-              child: SurfaceCard(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
+      backgroundColor: AppColors.background,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.xxl),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: isWide ? 400 : 360),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 34,
-                            width: 34,
-                            decoration: BoxDecoration(
-                              color: AppColors.accentGreen,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(
-                              LucideIcons.sparkles,
-                              color: Colors.white,
-                              size: 18,
-                            ),
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        child: const Icon(
+                          LucideIcons.sparkles,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      Text(
+                        'Estud.ai',
+                        style: context.textTheme.displayMedium?.copyWith(
+                          color: AppColors.textMain,
+                          height: 1.0,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        'Entre para continuar.',
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 48),
+
+                  // Inputs
+                  AppTextField(
+                    label: 'E-mail',
+                    hintText: 'nome@exemplo.com',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    validator: Validators.email,
+                    onChanged: notifier.updateEmail,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    label: 'Senha',
+                    hintText: '••••••••',
+                    controller: _passwordController,
+                    obscureText: state.obscurePassword,
+                    textInputAction: TextInputAction.done,
+                    validator: (value) => Validators.minLength(
+                      value,
+                      6,
+                      field: 'Senha',
+                    ),
+                    onChanged: notifier.updatePassword,
+                    suffix: IconButton(
+                      onPressed: notifier.togglePasswordVisibility,
+                      icon: Icon(
+                        state.obscurePassword
+                            ? LucideIcons.eye
+                            : LucideIcons.eyeOff,
+                        size: 20,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
+
+                  // Actions
+                  PrimaryButton(
+                    label: 'ENTRAR',
+                    isLoading: state.isLoading,
+                    onPressed: _handleSubmit,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  GhostButton(
+                    label: 'CRIAR CONTA',
+                    onPressed: () async {
+                      final created = await Navigator.push<bool>(
+                        context,
+                        SlideUpRoute(page: const RegisterScreen()),
+                      );
+                      if (!context.mounted) return;
+                      if (created == true) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Conta criada, faça login'),
+                            backgroundColor: AppColors.success,
                           ),
-                          const SizedBox(width: AppSpacing.md),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Estud.ai',
-                                style: context.textTheme.titleLarge,
+                        );
+                      }
+                    },
+                  ),
+
+                  // Error Feedback
+                  if (state.error != null) ...[
+                    const SizedBox(height: AppSpacing.lg),
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withValues(alpha: 0.1),
+                          border: Border.all(color: AppColors.error),
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      child: Row(
+                        children: [
+                          const Icon(LucideIcons.alertCircle,
+                              color: AppColors.error, size: 20),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              'E-mail ou senha inválidos',
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: AppColors.error,
+                                fontWeight: FontWeight.w600,
                               ),
-                              Text(
-                                'Entre para continuar',
-                                style: context.textTheme.bodyMedium,
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.xl),
-                      AppTextField(
-                        label: 'E-mail',
-                        hintText: 'voce@estud.ai',
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        validator: Validators.email,
-                        onChanged: notifier.updateEmail,
-                        prefixIcon: const Icon(
-                          LucideIcons.mail,
-                          size: 18,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      AppTextField(
-                        label: 'Senha',
-                        hintText: '********',
-                        controller: _passwordController,
-                        obscureText: state.obscurePassword,
-                        textInputAction: TextInputAction.done,
-                        validator: (value) => Validators.minLength(
-                          value,
-                          6,
-                          field: 'Senha',
-                        ),
-                        onChanged: notifier.updatePassword,
-                        prefixIcon: const Icon(
-                          LucideIcons.lock,
-                          size: 18,
-                        ),
-                        suffix: IconButton(
-                          onPressed: notifier.togglePasswordVisibility,
-                          icon: Icon(
-                            state.obscurePassword
-                                ? LucideIcons.eye
-                                : LucideIcons.eyeOff,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-                      PrimaryButton(
-                        label: 'Entrar',
-                        isLoading: state.isLoading,
-                        onPressed: _handleSubmit,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      GhostButton(
-                        label: 'Criar conta',
-                        onPressed: () async {
-                          final created = await Navigator.push<bool>(
-                            context,
-                            SlideUpRoute(page: const RegisterScreen()),
-                          );
-                          if (!context.mounted) return;
-                          if (created == true) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Conta criada, faca login'),
-                                backgroundColor: AppColors.accentGreen,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                      if (state.error != null) ...[
-                        const SizedBox(height: AppSpacing.md),
-                        Text(
-                          'Login invalido',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: AppColors.error,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),

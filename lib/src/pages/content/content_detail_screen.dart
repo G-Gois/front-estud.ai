@@ -3,6 +3,7 @@ import 'package:estud_ai/src/core/constants/app_colors.dart';
 import 'package:estud_ai/src/core/constants/app_spacing.dart';
 import 'package:estud_ai/src/core/extensions/build_context_extension.dart';
 import 'package:estud_ai/src/pages/questionario/questionario_screen.dart';
+import 'package:estud_ai/src/shared_widgets/buttons/primary_button.dart';
 import 'package:estud_ai/src/shared_widgets/layout/surface_card.dart';
 import 'package:estud_ai/src/utils/nav/transitions.dart';
 import 'package:flutter/material.dart';
@@ -38,14 +39,20 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
     final asyncConteudo = ref.watch(conteudoDetalheProvider(widget.conteudoId));
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Conteudo'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(LucideIcons.arrowLeft, color: AppColors.textMain),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SafeArea(
         child: asyncConteudo.when(
           data: (data) {
             final conteudo = data['data'] as Map<String, dynamic>? ?? {};
-            final titulo = conteudo['titulo']?.toString() ?? 'Conteudo';
+            final titulo = conteudo['titulo']?.toString() ?? 'Conteúdo';
             final descricao = conteudo['descricao']?.toString() ?? '';
             final questionarios =
                 (conteudo['questionarios'] as List<dynamic>? ?? [])
@@ -62,22 +69,38 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
               children: [
                 Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.all(AppSpacing.xl),
+                    padding: const EdgeInsets.all(AppSpacing.xxl),
                     children: [
-                      Text(
-                        titulo,
-                        style: context.textTheme.headlineMedium,
+                      Hero(
+                        tag: 'conteudo_${widget.conteudoId}',
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Text(
+                            titulo,
+                            style: context.textTheme.displayMedium?.copyWith(
+                              color: AppColors.textMain,
+                              height: 1.1,
+                            ),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.lg),
                       Text(
                         descricao,
-                        style: context.textTheme.bodyMedium,
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
                       ),
-                      const SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: 48),
+                      Text(
+                        'Questionários',
+                        style: context.textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
                       ...sorted.map(
                         (q) => Padding(
                           padding:
-                              const EdgeInsets.only(bottom: AppSpacing.md),
+                              const EdgeInsets.only(bottom: AppSpacing.lg),
                           child: _QuestionarioCard(
                             data: q,
                             conteudoId: widget.conteudoId,
@@ -122,27 +145,19 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                   ),
                 ),
                 if (ultimoFinalizado)
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: ElevatedButton.icon(
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.xxl),
+                    decoration: const BoxDecoration(
+                      border: Border(top: BorderSide(color: AppColors.borderSoft)),
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: PrimaryButton(
                         onPressed:
                             _isCreatingNext ? null : _continuarEstudando,
-                        icon: _isCreatingNext
-                            ? const SizedBox(
-                                height: 18,
-                                width: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Icon(LucideIcons.trendingUp),
-                        label: Text(
-                          _isCreatingNext
-                              ? 'Gerando...'
-                              : 'Continuar estudos',
-                        ),
+                        label: _isCreatingNext
+                            ? 'GERANDO...'
+                            : 'CONTINUAR ESTUDOS',
                       ),
                     ),
                   ),
@@ -185,29 +200,28 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
       context: context,
       backgroundColor: AppColors.background,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.zero,
       ),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Proximo questionario',
-                style: context.textTheme.titleLarge,
+                'Próximo passo',
+                style: context.textTheme.headlineMedium,
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              PrimaryButton(
+                onPressed: () => Navigator.of(ctx).pop(true),
+                label: 'MODO PROGRESSÃO',
               ),
               const SizedBox(height: AppSpacing.md),
-              ElevatedButton.icon(
-                onPressed: () => Navigator.of(ctx).pop(true),
-                icon: const Icon(LucideIcons.trendingUp),
-                label: const Text('Modo progressao'),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              OutlinedButton.icon(
+              OutlinedButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
-                icon: const Icon(LucideIcons.repeat),
-                label: const Text('Modo fixacao'),
+                child: const Text('MODO FIXAÇÃO'),
               ),
             ],
           ),
@@ -215,7 +229,12 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
       },
     );
 
-    if (choice == null) return;
+    if (choice == null) {
+        setState(() {
+        _isCreatingNext = false;
+      });
+      return;
+    }
 
     final contentRepo = ref.read(contentRepositoryProvider);
     final result = await contentRepo.gerarNovoQuestionario(
@@ -244,7 +263,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result.message ?? 'Erro ao gerar questionario'),
+          content: Text(result.message ?? 'Erro ao gerar questionário'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -271,7 +290,7 @@ class _QuestionarioCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final finalizado = data['finalizado'] == true;
     final resumo = data['resumo_questionario']?.toString();
-    final titulo = data['titulo']?.toString() ?? 'Questionario';
+    final titulo = data['titulo']?.toString() ?? 'Questionário';
     final descricao = data['descricao']?.toString() ?? '';
     final modo = data['modo']?.toString();
     final ordem = data['ordem']?.toString();
@@ -280,7 +299,12 @@ class _QuestionarioCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: finalizado ? () => onToggle(id) : onTap,
-      child: SurfaceCard(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: AppColors.borderSoft),
+          borderRadius: BorderRadius.zero,
+        ),
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,18 +312,16 @@ class _QuestionarioCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  height: 32,
-                  width: 32,
+                  height: 24,
+                  width: 24,
                   decoration: BoxDecoration(
-                    color: finalizado
-                        ? AppColors.accentGreen
-                        : AppColors.secondaryGreenLight,
-                    borderRadius: BorderRadius.circular(10),
+                    color: finalizado ? AppColors.textMain : AppColors.backgroundSoft,
+                    borderRadius: BorderRadius.zero,
                   ),
                   child: Icon(
                     finalizado ? LucideIcons.check : LucideIcons.loader2,
-                    color: finalizado ? Colors.white : AppColors.textMain,
-                    size: 16,
+                    color: finalizado ? Colors.white : AppColors.textSecondary,
+                    size: 14,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
@@ -314,68 +336,56 @@ class _QuestionarioCard extends StatelessWidget {
                     '#$ordem',
                     style: context.textTheme.labelMedium,
                   ),
-                IconButton(
-                  onPressed: () {
-                    if (finalizado) {
-                      onToggle(id);
-                      return;
-                    }
-                    onTap();
-                  },
-                  icon: Icon(
-                    finalizado
-                        ? (expanded ? LucideIcons.chevronUp : LucideIcons.chevronDown)
-                        : LucideIcons.chevronRight,
-                    size: 18,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.md),
             Text(
               descricao,
               style: context.textTheme.bodyMedium,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.lg),
             Wrap(
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.xs,
               children: [
                 if (modo != null)
                   _Badge(
-                    icon: LucideIcons.slidersHorizontal,
-                    label: modo,
+                    label: modo.toUpperCase(),
                   ),
                 _Badge(
-                  icon:
-                      finalizado ? LucideIcons.checkCircle : LucideIcons.hourglass,
-                  label: finalizado ? 'Finalizado' : 'Em aberto',
-                  color: finalizado
-                      ? AppColors.accentGreen
-                      : AppColors.secondaryGreenLight,
+                  label: finalizado ? 'FINALIZADO' : 'EM ABERTO',
                   darkText: !finalizado,
+                  color: finalizado ? AppColors.backgroundSoft : Colors.white,
+                  borderColor: finalizado ? Colors.transparent : AppColors.textMain,
                 ),
               ],
             ),
             if (finalizado && resumo != null) ...[
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.lg),
               if (expanded) ...[
                 const Divider(height: 1, color: AppColors.borderSoft),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.lg),
                 Text(
-                  'Resumo',
-                  style: context.textTheme.titleSmall,
+                  'RESUMO',
+                  style: context.textTheme.labelMedium,
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   resumo,
                   style: context.textTheme.bodyMedium,
                 ),
               ] else
-                TextButton(
-                  onPressed: () => onToggle(id),
-                  child: const Text('Ver resumo'),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () => onToggle(id),
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(0, 32),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: const Text('VER RESUMO'),
+                  ),
                 ),
             ],
           ],
@@ -387,15 +397,15 @@ class _QuestionarioCard extends StatelessWidget {
 
 class _Badge extends StatelessWidget {
   const _Badge({
-    required this.icon,
     required this.label,
     this.color,
-    this.darkText = false,
+    this.borderColor,
+    this.darkText = true,
   });
 
-  final IconData icon;
   final String label;
   final Color? color;
+  final Color? borderColor;
   final bool darkText;
 
   @override
@@ -403,29 +413,20 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
+        vertical: 6,
       ),
       decoration: BoxDecoration(
         color: color ?? AppColors.backgroundSoft,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.borderSoft),
+        borderRadius: BorderRadius.zero,
+        border: Border.all(color: borderColor ?? Colors.transparent),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 14,
-            color: darkText ? AppColors.textMain : AppColors.textSecondary,
-          ),
-          const SizedBox(width: AppSpacing.xs),
-          Text(
-            label,
-            style: context.textTheme.labelMedium?.copyWith(
-              color: darkText ? AppColors.textMain : AppColors.textSecondary,
-            ),
-          ),
-        ],
+      child: Text(
+        label,
+        style: context.textTheme.labelSmall?.copyWith(
+          color: darkText ? AppColors.textMain : AppColors.textSecondary,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
