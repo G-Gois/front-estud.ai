@@ -146,6 +146,7 @@ class HomeScreen extends ConsumerWidget {
 
   Future<void> _showCreate(BuildContext context, WidgetRef ref) async {
     final controller = TextEditingController();
+    final isLoadingNotifier = ValueNotifier<bool>(false);
     final repo = ref.read(contentRepositoryProvider);
 
     await showModalBottomSheet(
@@ -156,10 +157,9 @@ class HomeScreen extends ConsumerWidget {
         borderRadius: BorderRadius.zero,
       ),
       builder: (_) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            bool isLoading = false;
-
+        return ValueListenableBuilder<bool>(
+          valueListenable: isLoadingNotifier,
+          builder: (context, isLoading, _) {
             return Padding(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl,
@@ -181,41 +181,50 @@ class HomeScreen extends ConsumerWidget {
                     style: context.textTheme.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  TextField(
-                    controller: controller,
-                    maxLines: 3,
-                    enabled: !isLoading,
-                    onChanged: (_) => setState(() {}),
-                    style: context.textTheme.bodyLarge,
-                    decoration: const InputDecoration(
-                      hintText: 'Ex: Resumo sobre a Revolução Francesa...',
-                      filled: true,
-                      fillColor: AppColors.backgroundSoft,
-                      border: InputBorder.none,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (controller.text.length < 10)
-                        Text(
-                          'Mínimo 10 caracteres',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: AppColors.error,
+                  ListenableBuilder(
+                    listenable: controller,
+                    builder: (context, _) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            controller: controller,
+                            maxLines: 3,
+                            enabled: !isLoading,
+                            style: context.textTheme.bodyLarge,
+                            decoration: const InputDecoration(
+                              hintText: 'Ex: Resumo sobre a Revolução Francesa...',
+                              filled: true,
+                              fillColor: AppColors.backgroundSoft,
+                              border: InputBorder.none,
+                            ),
                           ),
-                        )
-                      else
-                        const SizedBox(),
-                      Text(
-                        '${controller.text.length} / 10',
-                        style: context.textTheme.labelSmall?.copyWith(
-                          color: controller.text.length < 10
-                              ? AppColors.error
-                              : AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
+                          const SizedBox(height: AppSpacing.xs),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (controller.text.length < 10)
+                                Text(
+                                  'Mínimo 10 caracteres',
+                                  style: context.textTheme.labelSmall?.copyWith(
+                                    color: AppColors.error,
+                                  ),
+                                )
+                              else
+                                const SizedBox(),
+                              Text(
+                                '${controller.text.length} / 10',
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: controller.text.length < 10
+                                      ? AppColors.error
+                                      : AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   SizedBox(
@@ -240,12 +249,12 @@ class HomeScreen extends ConsumerWidget {
                                 return;
                               }
 
-                              setState(() => isLoading = true);
+                              isLoadingNotifier.value = true;
 
                               final res = await repo.criarConteudo(text);
 
                               if (!context.mounted) return;
-                              setState(() => isLoading = false);
+                              isLoadingNotifier.value = false;
 
                               if (res.isSuccess) {
                                 navigator.pop(); // Close only on success
@@ -285,6 +294,9 @@ class HomeScreen extends ConsumerWidget {
         );
       },
     );
+
+    isLoadingNotifier.dispose();
+    controller.dispose();
   }
 }
 

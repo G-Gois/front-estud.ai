@@ -152,9 +152,33 @@ class ApiClient {
   }
 
   String? _parseError(DioException error) {
+    // Tenta extrair mensagem de JSON
     if (error.response?.data is Map && error.response?.data['message'] != null) {
       return error.response?.data['message']?.toString();
     }
+
+    // Trata respostas HTML de erro
+    if (error.response?.data is String) {
+      final htmlData = error.response?.data as String;
+
+      // Tenta extrair mensagem do <pre> tag
+      final preMatch = RegExp(r'<pre>(.*?)</pre>', dotAll: true).firstMatch(htmlData);
+      if (preMatch != null) {
+        String errorText = preMatch.group(1) ?? '';
+
+        // Remove tags HTML
+        errorText = errorText.replaceAll(RegExp(r'<br\s*/?>'), '\n');
+        errorText = errorText.replaceAll(RegExp(r'&nbsp;'), ' ');
+        errorText = errorText.replaceAll(RegExp(r'<[^>]*>'), '');
+
+        // Extrai apenas a primeira linha (a mensagem de erro principal)
+        final lines = errorText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+        if (lines.isNotEmpty) {
+          return lines.first.trim();
+        }
+      }
+    }
+
     return error.message;
   }
 }

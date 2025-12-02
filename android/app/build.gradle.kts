@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.estudai.estud_ai"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -24,8 +24,8 @@ android {
         applicationId = "com.estudai.estud_ai"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 21  // Android 5.0 - Compatível com a maioria dos dispositivos
+        targetSdk = 34  // Android 14 - Compatível com Android 12
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
