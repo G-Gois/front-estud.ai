@@ -191,7 +191,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     onTap: _selectDate,
                     child: AbsorbPointer(
                       child: AppTextField(
-                        label: 'Data de nascimento (opcional)',
+                        label: 'Data de nascimento',
                         hintText: 'Clique aqui para selecionar sua data de nascimento',
                         controller: _dataController,
                         readOnly: true,
