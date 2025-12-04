@@ -1,0 +1,237 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.estudai.estud_ai"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10    <!-- Permissões necessárias -->
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:3:5-66
+11-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:3:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:4:5-78
+12-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:4:22-76
+13    <!--
+14         Required to query activities that can process text, see:
+15         https://developer.android.com/training/package-visibility and
+16         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+17
+18         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin.
+19    -->
+20    <queries>
+20-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:43:5-48:15
+21        <intent>
+21-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:44:9-47:18
+22            <action android:name="android.intent.action.PROCESS_TEXT" />
+22-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:45:13-72
+22-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:45:21-70
+23
+24            <data android:mimeType="text/plain" />
+24-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:46:13-50
+24-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:46:19-48
+25        </intent>
+26        <intent>
+26-->[:file_picker] C:\Users\Usuario\Videos\front-estud.ai\build\file_picker\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:8:9-12:18
+27            <action android:name="android.intent.action.GET_CONTENT" />
+27-->[:file_picker] C:\Users\Usuario\Videos\front-estud.ai\build\file_picker\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:9:13-72
+27-->[:file_picker] C:\Users\Usuario\Videos\front-estud.ai\build\file_picker\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:9:21-69
+28
+29            <data android:mimeType="*/*" />
+29-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:46:13-50
+29-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:46:19-48
+30        </intent>
+31    </queries>
+32
+33    <uses-permission
+33-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:8:5-10:38
+34        android:name="android.permission.READ_EXTERNAL_STORAGE"
+34-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:9:9-64
+35        android:maxSdkVersion="32" />
+35-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:10:9-35
+36    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+36-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:11:5-76
+36-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:11:22-73
+37    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+37-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:12:5-75
+37-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:12:22-72
+38    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+38-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:13:5-75
+38-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:13:22-72
+39
+40    <permission
+40-->[androidx.core:core:1.13.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\dfc2fbca530748e569b0737b09fa016f\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+41        android:name="com.estudai.estud_ai.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+41-->[androidx.core:core:1.13.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\dfc2fbca530748e569b0737b09fa016f\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+42        android:protectionLevel="signature" />
+42-->[androidx.core:core:1.13.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\dfc2fbca530748e569b0737b09fa016f\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+43
+44    <uses-permission android:name="com.estudai.estud_ai.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+44-->[androidx.core:core:1.13.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\dfc2fbca530748e569b0737b09fa016f\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+44-->[androidx.core:core:1.13.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\dfc2fbca530748e569b0737b09fa016f\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+45
+46    <application
+47        android:name="android.app.Application"
+47-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:8:9-42
+48        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+48-->[androidx.core:core:1.13.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\dfc2fbca530748e569b0737b09fa016f\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+49        android:extractNativeLibs="true"
+50        android:icon="@mipmap/ic_launcher"
+50-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:9:9-43
+51        android:label="estud_ai" >
+51-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:7:9-33
+52        <activity
+52-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:10:9-31:20
+53            android:name="com.estudai.estud_ai.MainActivity"
+53-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:11:13-41
+54            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+54-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:16:13-163
+55            android:exported="true"
+55-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:12:13-36
+56            android:hardwareAccelerated="true"
+56-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:17:13-47
+57            android:launchMode="singleTop"
+57-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:13:13-43
+58            android:taskAffinity=""
+58-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:14:13-36
+59            android:theme="@style/LaunchTheme"
+59-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:15:13-47
+60            android:windowSoftInputMode="adjustResize" >
+60-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:18:13-55
+61
+62            <!--
+63                 Specifies an Android theme to apply to this Activity as soon as
+64                 the Android process has started. This theme is visible to the user
+65                 while the Flutter UI initializes. After that, this theme continues
+66                 to determine the Window background behind the Flutter UI.
+67            -->
+68            <meta-data
+68-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:23:13-26:17
+69                android:name="io.flutter.embedding.android.NormalTheme"
+69-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:24:15-70
+70                android:resource="@style/NormalTheme" />
+70-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:25:15-52
+71
+72            <intent-filter>
+72-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:27:13-30:29
+73                <action android:name="android.intent.action.MAIN" />
+73-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:28:17-68
+73-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:28:25-66
+74
+75                <category android:name="android.intent.category.LAUNCHER" />
+75-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:29:17-76
+75-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:29:27-74
+76            </intent-filter>
+77        </activity>
+78        <!--
+79             Don't delete the meta-data below.
+80             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+81        -->
+82        <meta-data
+82-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:34:9-36:33
+83            android:name="flutterEmbedding"
+83-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:35:13-44
+84            android:value="2" />
+84-->C:\Users\Usuario\Videos\front-estud.ai\android\app\src\main\AndroidManifest.xml:36:13-30
+85
+86        <provider
+86-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:16:9-25:20
+87            android:name="com.crazecoder.openfile.FileProvider"
+87-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:17:13-64
+88            android:authorities="com.estudai.estud_ai.fileProvider.com.crazecoder.openfile"
+88-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:18:13-88
+89            android:exported="false"
+89-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:19:13-37
+90            android:grantUriPermissions="true" >
+90-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:20:13-47
+91            <meta-data
+91-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:22:13-24:53
+92                android:name="android.support.FILE_PROVIDER_PATHS"
+92-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:23:17-67
+93                android:resource="@xml/filepaths" />
+93-->[:open_filex] C:\Users\Usuario\Videos\front-estud.ai\build\open_filex\intermediates\merged_manifest\release\processReleaseManifest\AndroidManifest.xml:24:17-50
+94        </provider>
+95
+96        <uses-library
+96-->[androidx.window:window:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\aed2861b2b6894f7067df3f3f96b791f\transformed\jetified-window-1.2.0\AndroidManifest.xml:23:9-25:40
+97            android:name="androidx.window.extensions"
+97-->[androidx.window:window:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\aed2861b2b6894f7067df3f3f96b791f\transformed\jetified-window-1.2.0\AndroidManifest.xml:24:13-54
+98            android:required="false" />
+98-->[androidx.window:window:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\aed2861b2b6894f7067df3f3f96b791f\transformed\jetified-window-1.2.0\AndroidManifest.xml:25:13-37
+99        <uses-library
+99-->[androidx.window:window:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\aed2861b2b6894f7067df3f3f96b791f\transformed\jetified-window-1.2.0\AndroidManifest.xml:26:9-28:40
+100            android:name="androidx.window.sidecar"
+100-->[androidx.window:window:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\aed2861b2b6894f7067df3f3f96b791f\transformed\jetified-window-1.2.0\AndroidManifest.xml:27:13-51
+101            android:required="false" />
+101-->[androidx.window:window:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\aed2861b2b6894f7067df3f3f96b791f\transformed\jetified-window-1.2.0\AndroidManifest.xml:28:13-37
+102
+103        <provider
+103-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\2572c773145932f08e3b72fd0d530e61\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+104            android:name="androidx.startup.InitializationProvider"
+104-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\2572c773145932f08e3b72fd0d530e61\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:25:13-67
+105            android:authorities="com.estudai.estud_ai.androidx-startup"
+105-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\2572c773145932f08e3b72fd0d530e61\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:26:13-68
+106            android:exported="false" >
+106-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\2572c773145932f08e3b72fd0d530e61\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:27:13-37
+107            <meta-data
+107-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\2572c773145932f08e3b72fd0d530e61\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+108                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+108-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\2572c773145932f08e3b72fd0d530e61\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:30:17-75
+109                android:value="androidx.startup" />
+109-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\2572c773145932f08e3b72fd0d530e61\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:31:17-49
+110            <meta-data
+110-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\bb10008c4b33ee9597583412a41828ed\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+111                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+111-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\bb10008c4b33ee9597583412a41828ed\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+112                android:value="androidx.startup" />
+112-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\bb10008c4b33ee9597583412a41828ed\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+113            <meta-data
+113-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+114                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+114-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+115                android:value="androidx.startup" />
+115-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+116        </provider>
+117
+118        <receiver
+118-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+119            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+119-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+120            android:directBootAware="false"
+120-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+121            android:enabled="true"
+121-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+122            android:exported="true"
+122-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+123            android:permission="android.permission.DUMP" >
+123-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+124            <intent-filter>
+124-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+125                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+125-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+125-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+126            </intent-filter>
+127            <intent-filter>
+127-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+128                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+129            </intent-filter>
+130            <intent-filter>
+130-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+131                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+131-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+131-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+132            </intent-filter>
+133            <intent-filter>
+133-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+134                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+134-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+134-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Usuario\.gradle\caches\8.10.2\transforms\5aacd87baa6feaa7bece87b01e7698f0\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+135            </intent-filter>
+136        </receiver>
+137    </application>
+138
+139</manifest>
