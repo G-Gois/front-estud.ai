@@ -2,9 +2,10 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   // Base segments
-  static const String auth = '/auth';
-  static const String conteudos = '/conteudos';
-  static const String questionarios = '/questionarios';
+  static const String api = '/api';
+  static const String auth = '$api/auth';
+  static const String conteudos = '$api/conteudos';
+  static const String questionarios = '$api/questionarios';
 
   // Auth
   static const String login = '$auth/login';

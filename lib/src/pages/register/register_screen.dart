@@ -3,11 +3,13 @@ import 'package:estud_ai/src/core/constants/app_spacing.dart';
 import 'package:estud_ai/src/core/extensions/build_context_extension.dart';
 import 'package:estud_ai/src/shared_widgets/buttons/primary_button.dart';
 import 'package:estud_ai/src/shared_widgets/inputs/app_text_field.dart';
+import 'package:estud_ai/src/shared_widgets/date_picker/custom_date_picker.dart';
 import 'package:estud_ai/src/utils/auth/auth_provider.dart';
 import 'package:estud_ai/src/utils/form/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:intl/intl.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -22,6 +24,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _senhaController;
   late final TextEditingController _dataController;
+  DateTime? _selectedDate;
 
   @override
   void initState() {
@@ -41,6 +44,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     super.dispose();
   }
 
+  Future<void> _selectDate() async {
+    final DateTime? picked = await CustomDatePicker.show(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _dataController.text = DateFormat('dd/MM/yyyy').format(picked);
+      });
+    }
+  }
+
   Future<void> _submit() async {
     final auth = ref.read(authSessionProvider.notifier);
     final authState = ref.read(authSessionProvider);
@@ -50,9 +69,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       nomeCompleto: _nomeController.text.trim(),
       email: _emailController.text.trim(),
       senha: _senhaController.text.trim(),
-      dataNascimento: _dataController.text.trim().isEmpty
-          ? null
-          : _dataController.text.trim(),
+      dataNascimento: _selectedDate != null
+          ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+          : null,
     );
 
     if (!mounted) return;
@@ -168,12 +187,45 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  AppTextField(
-                    label: 'Data de nascimento',
-                    hintText: 'YYYY-MM-DD',
-                    controller: _dataController,
-                    keyboardType: TextInputType.datetime,
+                  GestureDetector(
+                    onTap: _selectDate,
+                    child: AbsorbPointer(
+                      child: AppTextField(
+                        label: 'Data de nascimento (opcional)',
+                        hintText: 'Clique aqui para selecionar sua data de nascimento',
+                        controller: _dataController,
+                        readOnly: true,
+                        suffixIcon: Icon(
+                          LucideIcons.calendar,
+                          color: _selectedDate != null
+                              ? AppColors.primary
+                              : AppColors.textSecondary,
+                          size: 20,
+                        ),
+                      ),
+                    ),
                   ),
+                  if (_selectedDate != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.xs),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            LucideIcons.check,
+                            size: 14,
+                            color: AppColors.success,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Data selecionada: ${_dataController.text}',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: AppColors.success,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   const SizedBox(height: AppSpacing.xxl),
 
                   // Actions

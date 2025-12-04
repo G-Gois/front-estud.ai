@@ -10,10 +10,13 @@ class AppTextField extends StatelessWidget {
     this.keyboardType,
     this.obscureText = false,
     this.suffix,
+    this.suffixIcon,
     this.validator,
     this.onChanged,
     this.textInputAction,
     this.prefixIcon,
+    this.readOnly = false,
+    this.onTap,
   });
 
   final String label;
@@ -22,10 +25,13 @@ class AppTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final Widget? suffix;
+  final Widget? suffixIcon;
   final Widget? prefixIcon;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final TextInputAction? textInputAction;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +50,11 @@ class AppTextField extends StatelessWidget {
           validator: validator,
           onChanged: onChanged,
           textInputAction: textInputAction,
+          readOnly: readOnly,
+          onTap: onTap,
           decoration: InputDecoration(
             hintText: hintText,
-            suffixIcon: suffix,
+            suffixIcon: suffixIcon ?? suffix,
             prefixIcon: prefixIcon,
           ),
         ),

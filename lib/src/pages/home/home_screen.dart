@@ -374,32 +374,84 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            LucideIcons.layers,
-            size: 64,
-            color: AppColors.borderSoft,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            'Nada por aqui',
-            style: context.textTheme.headlineMedium?.copyWith(
-              color: AppColors.textSecondary,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Ícone grande com fundo
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: AppColors.backgroundSoft,
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: const Icon(
+                LucideIcons.bookOpen,
+                size: 56,
+                color: AppColors.primary,
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'Crie seu primeiro conteúdo para começar.',
-            style: context.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          PrimaryButton(
-            onPressed: onCreate,
-            label: 'COMEÇAR AGORA',
-          ),
-        ],
+            const SizedBox(height: AppSpacing.xxl),
+
+            // Título
+            Text(
+              'Nada por aqui ainda',
+              style: context.textTheme.displaySmall?.copyWith(
+                color: AppColors.textMain,
+                fontWeight: FontWeight.w600,
+                height: 1.2,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.md),
+
+            // Descrição
+            Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Text(
+                'Comece criando seu primeiro conteúdo de estudo.\nA IA vai te ajudar a aprender de forma personalizada.',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+
+            // Botão
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 300),
+              child: PrimaryButton(
+                onPressed: onCreate,
+                label: 'CRIAR PRIMEIRO CONTEÚDO',
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+
+            // Dica
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  LucideIcons.lightbulb,
+                  size: 16,
+                  color: AppColors.textSecondary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Dica: Seja específico sobre o que quer aprender',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
